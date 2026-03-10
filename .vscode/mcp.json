@@ -1,0 +1,18 @@
+{
+    "servers": {
+        "testOne": {
+            "type": "http",
+            "url": "http://localhost:3000/mcp",
+            "headers": {
+                "x-agent-id": "test"
+            }
+        },
+        "testTwo": {
+            "type": "http",
+            "url": "http://localhost:3000/mcp",
+            "headers": {
+                "x-agent-id": "test-1"
+            }
+        }
+    }
+}
