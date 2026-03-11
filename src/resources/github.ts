@@ -227,8 +227,7 @@ export const githubMcpCallTool = defineTool(
         request: JSON.stringify(args),
         response: safeResponsePreview,
         agent_id: (server.ctx.custom?.agent_id as string) || "unknown",
-        session_id:
-          (server.ctx.custom?.session_id as string) || "unknown_session",
+        session_id: server.ctx.sessionId || "unknown_session",
       });
 
       return tool.text(text);
