@@ -54,11 +54,17 @@ export const githubMcpCallTool = defineTool(
           ? result
           : JSON.stringify(result, null, 2);
 
+      const MAX_LOG_LENGTH = 500;
+      const loggedResponse =
+        text.length > MAX_LOG_LENGTH
+          ? `${text.slice(0, MAX_LOG_LENGTH)}… [truncated]`
+          : text;
+
       await logAgentSession({
         name: "github_mcp_call",
         tool: tool_name,
         request: JSON.stringify(args),
-        response: text,
+        response: loggedResponse,
         agent_id: (server.ctx.custom?.agent_id as string) || "unknown",
         session_id: server.ctx.sessionId ?? undefined,
       });
