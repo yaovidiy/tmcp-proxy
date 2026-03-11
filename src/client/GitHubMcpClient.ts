@@ -25,4 +25,4 @@ export class GitHubMcpClient extends McpClient {
   }
 }
 
-export const gitHubMcpClient = new GitHubMcpClient();
+export const githubMcpClient = new GitHubMcpClient();

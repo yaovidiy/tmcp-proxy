@@ -215,14 +215,20 @@ export const githubMcpCallTool = defineTool(
     try {
       const result = await gitHubMcpClient.call(tool_name, args ?? {});
       const text = typeof result === "string"
-        ? result : JSON.stringify(result, null, 2);
+        ? result
+        : JSON.stringify(result, null, 2);
+
+      const safeResponsePreview =
+        text.length > 2000 ? text.slice(0, 2000) + "…[truncated]" : text;
 
       await logAgentSession({
         name: "github_mcp_call",
         tool: tool_name,
         request: JSON.stringify(args),
-        response: text,
+        response: safeResponsePreview,
         agent_id: (server.ctx.custom?.agent_id as string) || "unknown",
+        session_id:
+          (server.ctx.custom?.session_id as string) || "unknown_session",
       });
 
       return tool.text(text);

@@ -99,9 +99,10 @@ await use_mcp_tool("github_mcp_call", {
 \`\`\`
 
 ## Pagination
-Most list tools accept \`page\` / \`perPage\`. Some action tools use \`per_page\` instead.
-Check the individual tool schema for the exact parameter name — use \`perPage\` for
-repos/issues/pull_requests/users toolsets and \`per_page\` for the actions toolset.
+Most list tools (including \`actions_list\`) accept \`page\` / \`perPage\`.
+Always check the individual tool schema for the exact parameter name — use \`perPage\`
+for the repos/issues/pull_requests/users/actions toolsets. If you see older docs or
+examples mentioning \`per_page\`, prefer \`perPage\` and double-check the tool schema.
 For GraphQL-backed tools, use the \`after\` cursor instead.
 `,
         },
