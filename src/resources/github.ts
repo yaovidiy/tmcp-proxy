@@ -219,7 +219,7 @@ export const githubMcpCallTool = defineTool(
         : JSON.stringify(result, null, 2);
 
       const safeResponsePreview =
-        text.length > 2000 ? text.slice(0, 2000) + "…[truncated]" : text;
+        text.length > 500 ? text.slice(0, 500) + "…[truncated]" : text;
 
       await logAgentSession({
         name: "github_mcp_call",
