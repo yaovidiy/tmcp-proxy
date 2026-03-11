@@ -56,7 +56,7 @@ Auth: Authorization: Bearer <GITHUB_TOKEN>
 
 ## issues toolset
 - list_issues
-    args: { owner: string, repo: string, state?: "OPEN"|"CLOSED", labels?: string[],
+    args: { owner: string, repo: string, state?: "open"|"closed", labels?: string[],
             orderBy?: "CREATED_AT"|"UPDATED_AT"|"COMMENTS", direction?: "ASC"|"DESC",
             since?: string, perPage?: number, after?: string }
 - issue_read
@@ -92,7 +92,7 @@ Auth: Authorization: Bearer <GITHUB_TOKEN>
 - actions_list
     args: { owner: string, repo: string,
             method: "list_workflows"|"list_workflow_runs"|"list_workflow_jobs"|"list_workflow_run_artifacts",
-            resource_id?: string, page?: number, per_page?: number,
+            resource_id?: string, page?: number, perPage?: number,
             workflow_runs_filter?: { status?: string, branch?: string, event?: string, actor?: string },
             workflow_jobs_filter?: { filter?: "latest"|"all" } }
 - actions_get

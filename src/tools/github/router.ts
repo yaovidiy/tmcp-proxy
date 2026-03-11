@@ -60,6 +60,7 @@ export const githubMcpCallTool = defineTool(
         request: JSON.stringify(args),
         response: text,
         agent_id: (server.ctx.custom?.agent_id as string) || "unknown",
+        session_id: server.ctx.sessionId ?? undefined,
       });
 
       return tool.text(text);
