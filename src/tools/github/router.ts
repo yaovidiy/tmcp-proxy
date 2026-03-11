@@ -3,7 +3,7 @@ import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { server } from "../../config/server";
 import { isToolAllowedForAgent, logAgentSession } from "../../utils";
-import { gitHubMcpClient } from "../../client/GitHubMcpClient";
+import { githubMcpClient } from "../../client/GitHubMcpClient";
 
 /**
  * GitHub MCP tool names available via the remote server (default toolsets).
@@ -47,7 +47,7 @@ export const githubMcpCallTool = defineTool(
   },
   async ({ tool_name, arguments: args }) => {
     try {
-      const result = await gitHubMcpClient.call(tool_name, args ?? {});
+      const result = await githubMcpClient.call(tool_name, args ?? {});
 
       const text =
         typeof result === "string"

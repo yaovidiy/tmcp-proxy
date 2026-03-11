@@ -180,7 +180,7 @@ export class GitHubMcpClient extends McpClient {
   }
 }
 
-export const gitHubMcpClient = new GitHubMcpClient();
+export const githubMcpClient = new GitHubMcpClient();
 \`\`\`
 
 ---
@@ -195,7 +195,7 @@ import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { server } from "../../config/server";
 import { isToolAllowedForAgent, logAgentSession } from "../../utils";
-import { gitHubMcpClient } from "../../client/GitHubMcpClient";
+import { githubMcpClient } from "../../client/GitHubMcpClient";
 
 export const githubMcpCallTool = defineTool(
   {
@@ -213,7 +213,7 @@ export const githubMcpCallTool = defineTool(
   },
   async ({ tool_name, arguments: args }) => {
     try {
-      const result = await gitHubMcpClient.call(tool_name, args ?? {});
+      const result = await githubMcpClient.call(tool_name, args ?? {});
       const text = typeof result === "string"
         ? result
         : JSON.stringify(result, null, 2);
@@ -227,7 +227,7 @@ export const githubMcpCallTool = defineTool(
         request: JSON.stringify(args),
         response: safeResponsePreview,
         agent_id: (server.ctx.custom?.agent_id as string) || "unknown",
-        session_id: server.ctx.sessionId || "unknown_session",
+        session_id: server.ctx.sessionId ?? undefined,
       });
 
       return tool.text(text);
