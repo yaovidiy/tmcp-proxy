@@ -45,6 +45,10 @@ export abstract class McpClient {
     return response.json() as Promise<JsonRpcResponse>;
   }
 
+  protected extraHeaders(): Record<string, string> {
+    return {};
+  }
+
   protected async post(
     body: JsonRpcRequest,
     sessionId?: string,
@@ -52,6 +56,7 @@ export abstract class McpClient {
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
       Accept: "application/json, text/event-stream",
+      ...this.extraHeaders(),
     };
     if (sessionId) headers["Mcp-Session-Id"] = sessionId;
 
