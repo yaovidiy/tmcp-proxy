@@ -7,6 +7,7 @@ import {
   figmaGetComponentsTool,
   figmaGetVariablesTool,
 } from "./figma";
+import { context7GetContextTool } from "./context7/router";
 
 export const tools = [
   localReadTool,
@@ -16,6 +17,7 @@ export const tools = [
   figmaGetStylesTool,
   figmaGetComponentsTool,
   figmaGetVariablesTool,
+  context7GetContextTool,
 ];
 
 export {
@@ -26,4 +28,5 @@ export {
   figmaGetStylesTool,
   figmaGetComponentsTool,
   figmaGetVariablesTool,
+  context7GetContextTool,
 };
