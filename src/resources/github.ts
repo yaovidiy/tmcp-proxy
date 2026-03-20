@@ -200,16 +200,15 @@ import { githubMcpClient } from "../../client/GitHubMcpClient";
 export const githubMcpCallTool = defineTool(
   {
     name: "github_mcp_call",
-    description: "Call any tool on the remote GitHub MCP server.",
+    description:
+      "Call any tool on the remote GitHub MCP server. " +
+      "IMPORTANT: 'tool_name' and 'arguments' are two separate top-level properties — never nest or serialize arguments inside tool_name. " +
+      "CORRECT: { tool_name: \"list_issues\", arguments: { owner: \"x\", repo: \"y\" } }. " +
+      "WRONG:   { tool_name: \"{\\\"tool_name\\\":\\\"list_issues\\\",\\\"arguments\\\":{...}}\" }.",
     schema: v.object({
       tool_name: v.string(),
       arguments: v.optional(v.record(v.string(), v.unknown()), {}),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "github_mcp_call",
-      ),
   },
   async ({ tool_name, arguments: args }) => {
     try {

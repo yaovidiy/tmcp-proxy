@@ -8,6 +8,11 @@ import {
   figmaGetVariablesTool,
 } from "./figma";
 import { context7GetContextTool } from "./context7/router";
+import {
+  workspaceCreateTool,
+  workspaceStoriesTool,
+  workspaceTasksTool,
+} from "./workspace";
 
 export const tools = [
   localReadTool,
@@ -18,6 +23,9 @@ export const tools = [
   figmaGetComponentsTool,
   figmaGetVariablesTool,
   context7GetContextTool,
+  workspaceCreateTool,
+  workspaceStoriesTool,
+  workspaceTasksTool,
 ];
 
 export {
@@ -29,4 +37,7 @@ export {
   figmaGetComponentsTool,
   figmaGetVariablesTool,
   context7GetContextTool,
+  workspaceCreateTool,
+  workspaceStoriesTool,
+  workspaceTasksTool,
 };

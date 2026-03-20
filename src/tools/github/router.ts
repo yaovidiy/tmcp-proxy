@@ -25,6 +25,9 @@ export const githubMcpCallTool = defineTool(
     name: "github_mcp_call",
     description:
       "Call any tool on the remote GitHub MCP server. " +
+      "IMPORTANT: 'tool_name' and 'arguments' are two separate top-level properties — never nest or serialize arguments inside tool_name. " +
+      "CORRECT: { tool_name: \"list_issues\", arguments: { owner: \"x\", repo: \"y\" } }. " +
+      "WRONG:   { tool_name: \"{\\\"tool_name\\\":\\\"list_issues\\\",\\\"arguments\\\":{...}}\" }. " +
       "Default toolsets expose: context (get_me), repos (get_file_contents, list_branches, " +
       "list_commits, search_repositories, get_commit, get_tag, list_tags, get_latest_release, " +
       "list_releases, get_release_by_tag, search_code), issues (issue_read, list_issues, " +
@@ -33,17 +36,11 @@ export const githubMcpCallTool = defineTool(
       "actions (actions_get, actions_list, get_job_logs), " +
       "code_security (list_code_scanning_alerts, get_code_scanning_alert, " +
       "list_secret_scanning_alerts, get_secret_scanning_alert). " +
-      "Pass the exact tool_name and its arguments as defined by the GitHub MCP server. " +
       "Requires GITHUB_TOKEN environment variable to be set.",
     schema: v.object({
       tool_name: v.string(),
       arguments: v.optional(v.record(v.string(), v.unknown()), {}),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "github_mcp_call",
-      ),
   },
   async ({ tool_name, arguments: args }) => {
     try {

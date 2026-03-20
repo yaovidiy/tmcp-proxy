@@ -17,15 +17,12 @@ export const figmaGetComponentsTool = defineTool(
     description:
       "Fetches all published components and component sets from a Figma file. " +
       "Returns component names, descriptions, node IDs, and their containing frame/page. " +
-      "Results are cached for 1 hour to minimise Figma API usage.",
+      "Results are cached for 1 hour to minimise Figma API usage. " +
+      "Call pattern: { figma_file_key: \"<key>\" } — the file key is the alphanumeric segment from the Figma file URL: " +
+      "https://www.figma.com/file/<key>/...",
     schema: v.object({
       figma_file_key: v.string(),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "figma_get_components",
-      ),
   },
   async ({ figma_file_key }) => {
     const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";

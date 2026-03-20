@@ -18,15 +18,12 @@ export const figmaGetVariablesTool = defineTool(
       "Fetches all local variable collections and variables from a Figma file. " +
       "Returns variable names, types (BOOLEAN, FLOAT, STRING, COLOR), collection groupings, " +
       "and resolved values per mode — useful for extracting design tokens. " +
-      "Results are cached for 1 hour to minimise Figma API usage.",
+      "Results are cached for 1 hour to minimise Figma API usage. " +
+      "Call pattern: { figma_file_key: \"<key>\" } — the file key is the alphanumeric segment from the Figma file URL: " +
+      "https://www.figma.com/file/<key>/...",
     schema: v.object({
       figma_file_key: v.string(),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "figma_get_variables",
-      ),
   },
   async ({ figma_file_key }) => {
     const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";

@@ -10,17 +10,20 @@ export const svelteMcpCallTool = defineTool(
   {
     name: "svelte_mcp_call",
     description:
-      "Get official Svelte documentation or call any tool on the Svelte MCP server. " +
-      "You can use next tool_name: list-sections, get-documentation, svelte-autofixer, playground-link",
+      "Call any tool on the Svelte MCP server for official documentation and code fixes. " +
+      "IMPORTANT: 'tool_name' and 'arguments' are two separate top-level properties — never nest or serialize arguments inside tool_name. " +
+      "CORRECT: { tool_name: \"get-documentation\", arguments: { section: \"Runes\" } }. " +
+      "WRONG:   { tool_name: \"{\\\"tool_name\\\":\\\"get-documentation\\\",\\\"arguments\\\":{...}}\" }. " +
+      "Available tool_name values: " +
+      "• list-sections — lists all available documentation sections. Arguments: none. " +
+      "• get-documentation — returns documentation for requested sections. Arguments: { section: \"<section-name>\" } (use a name from list-sections). " +
+      "• svelte-autofixer — analyzes Svelte code for issues and suggestions. Arguments: { code: \"<svelte component code>\" }. " +
+      "If issues are found, fix them and call again to verify no issues remain. " +
+      "• playground-link — generates a Svelte REPL playground link. Arguments: { code: \"<svelte code>\" }.",
     schema: v.object({
       tool_name: v.string(),
       arguments: v.optional(v.record(v.string(), v.unknown()), {}),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "svelte_mcp_call",
-      ),
   },
   async ({ tool_name, arguments: args }) => {
     try {

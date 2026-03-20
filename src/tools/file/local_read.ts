@@ -13,16 +13,14 @@ const MAX_FILE_LINES = 200; // Limit the number of lines read from a file to pre
 export const localReadTool = defineTool(
   {
     name: "local_read_file",
-    description: "Reads content from a local file",
+    description:
+      "Reads content from a local file. Returns up to 200 lines starting at start_line (0-indexed, defaults to 0). " +
+      "If the file has more lines, the response includes a pagination message with the next start_line to pass. " +
+      "Call pattern: { path: \"/absolute/path/to/file\", start_line?: 0 }",
     schema: v.object({
       path: v.string(),
       start_line: v.optional(v.number(), 0),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "local_read_file",
-      ),
   },
   async ({ path, start_line = 0 }) => {
     try {

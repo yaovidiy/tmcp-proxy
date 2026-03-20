@@ -7,16 +7,13 @@ import { server } from "../../config/server";
 export const localWriteTool = defineTool(
   {
     name: "local_write_file",
-    description: "Writes content to a local file",
+    description:
+      "Writes (or overwrites) content to a local file, creating it if it does not exist. " +
+      "Call pattern: { path: \"/absolute/path/to/file\", content: \"file content\" }",
     schema: v.object({
       path: v.string(),
       content: v.string(),
     }),
-    enabled: () =>
-      isToolAllowedForAgent(
-        (server.ctx.custom?.agent_id as string) || "unknown",
-        "local_write_file",
-      ),
   },
   async ({ path, content }) => {
     try {

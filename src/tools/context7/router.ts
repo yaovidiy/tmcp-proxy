@@ -9,40 +9,35 @@ export const context7GetContextTool = defineTool(
     {
         name: "context7_mcp",
         description:
-            "Get relavant context for a given library and query from the Context7 API" +
-            "Tools names and arguments that are allowed for this tool:" +
-            "- get_lib_id - tool to get library id in order to search via it's documents and recive a context;" +
-            "allowed arguments:" +
-            "libraryName - name of the library you are looking for (e.g.: React, Drizzle etc)" +
-            "query: query that you are interested to find in that library" +
-            "Result of the toll work is the libraryId which you must use in get_context tool name" +
-            "- get_context - a tool that will return context for the quired library and query you are looking for" +
-            "allowed arguments:" +
-            "libraryId - id of the library recived from get_lib_id tool name" +
-            "query - context information you are looking for (e.g. how to use useState hook in React, how to make a request with Drizzle etc)" +
-            "Result of the tool work is a text with relavant context for your query",
+            "Get relevant context for a given library and query from the Context7 API. " +
+            "IMPORTANT: 'tool_name' and 'arguments' are two separate top-level properties — never nest or serialize arguments inside tool_name. " +
+            "CORRECT: { tool_name: \"get_lib_id\", arguments: { libraryName: \"React\", query: \"hooks\" } }. " +
+            "WRONG:   { tool_name: \"{\\\"tool_name\\\":\\\"get_lib_id\\\",\\\"arguments\\\":{...}}\" }. " +
+            "Two-step workflow: first resolve a libraryId, then fetch context with it. " +
+            "Available tool_name values: " +
+            "• get_lib_id — resolves the Context7 library ID for a given library name. " +
+            "Call pattern: { tool_name: \"get_lib_id\", arguments: { libraryName: \"React\", query: \"useState hook\" } }. " +
+            "Returns the libraryId string to use in the next step. " +
+            "• get_context — returns relevant documentation and code snippets for a library and query. " +
+            "Call pattern: { tool_name: \"get_context\", arguments: { libraryId: \"<id from get_lib_id>\", query: \"how to use useState hook\" } }. " +
+            "Returns a text block with relevant context for your query.",
         schema: v.object({
             tool_name: v.string(),
             arguments: v.record(v.string(), v.unknown()),
         }),
-        enabled: () =>
-            isToolAllowedForAgent(
-                (server.ctx.custom?.agent_id as string) || "unknown",
-                "context7_mcp",
-            ),
     },
     async ({ tool_name, arguments: args }) => {
         const context7Client = new Context7Client();
 
         if (!args) {
             if (tool_name === "get_lib_id") {
-                return tool.text("No arguments provided. Please follow next format to call this tool : \n { tool_name: get_lib_id, arguments: { libraryName: [name of the library you are looking for], query: [searching queary of the context you are looking for] } }");
+                return tool.error("Missing arguments for get_lib_id. Call pattern: { tool_name: \"get_lib_id\", arguments: { libraryName: \"<library name>\", query: \"<what you are searching for>\" } }");
             }
 
             if (tool_name === 'get_context') {
-                return tool.text("No arguments provided. Please follow next format to call this tool : \n { tool_name: get_lib_id, arguments: { libraryId: [id recieved from get_lib_id], query: [searching queary of the context you are looking for] } }");
+                return tool.error("Missing arguments for get_context. Call pattern: { tool_name: \"get_context\", arguments: { libraryId: \"<id from get_lib_id>\", query: \"<what you are searching for>\" } }");
             }
-            return tool.text("No arguments provided. Please provide necessary arguments to use the tool.");
+            return tool.error("Missing arguments. Available tool_name values: get_lib_id, get_context.");
         }
 
         if (tool_name === "get_lib_id") {
@@ -65,6 +60,6 @@ export const context7GetContextTool = defineTool(
             return tool.text(contextData.context);
         }
 
-        return tool.text(`Tool name ${tool_name} is not supported. Please use either get_lib_id or get_context as tool_name.`);
+        return tool.error(`tool_name "${tool_name}" is not supported. Available tool_name values: get_lib_id, get_context.`);
     }
 );
