@@ -2,7 +2,7 @@ import { defineTool } from "tmcp/tool";
 import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { server } from "../../config/server";
-import { isToolAllowedForAgent, logAgentSession } from "../../utils";
+import { isToolAllowedForAgent, logAgentSession, withWorkspaceGuard } from "../../utils";
 import { svelteMcpClient } from "../../client/svelteClient";
 import { parseSvelteMcpResponse, type SvelteMcpResponse } from "./utils";
 
@@ -25,7 +25,7 @@ export const svelteMcpCallTool = defineTool(
       arguments: v.optional(v.record(v.string(), v.unknown()), {}),
     }),
   },
-  async ({ tool_name, arguments: args }) => {
+  withWorkspaceGuard(async ({ tool_name, arguments: args }) => {
     try {
       let svelteMCPArgs = args;
       if (args?.suggested_sections) {
@@ -55,5 +55,5 @@ export const svelteMcpCallTool = defineTool(
         }`,
       );
     }
-  },
+  }),
 );

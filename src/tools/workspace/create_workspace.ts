@@ -2,7 +2,7 @@ import { defineTool } from "tmcp/tool";
 import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { server } from "../../config/server";
-import { isToolAllowedForAgent, logAgentSession } from "../../utils";
+import { isToolAllowedForAgent, logAgentSession, withWorkspaceGuard } from "../../utils";
 import { db } from "../../db";
 import { workspaces } from "../../db/schema";
 
@@ -17,7 +17,7 @@ export const workspaceCreateTool = defineTool(
       description: v.optional(v.string()),
     }),
   },
-  async ({ name, description }) => {
+  withWorkspaceGuard(async ({ name, description }) => {
     const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";
     const now = Math.floor(Date.now() / 1000);
 
@@ -48,5 +48,5 @@ export const workspaceCreateTool = defineTool(
         `workspace_create failed: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
-  },
+  }),
 );

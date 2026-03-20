@@ -3,7 +3,7 @@ import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { eq } from "drizzle-orm";
 import { server } from "../../config/server";
-import { isToolAllowedForAgent, logAgentSession } from "../../utils";
+import { isToolAllowedForAgent, logAgentSession, withWorkspaceGuard } from "../../utils";
 import { figmaClient } from "../../client/FigmaClient";
 import { parseFigmaVariables } from "./utils";
 import { db } from "../../db";
@@ -25,7 +25,7 @@ export const figmaGetVariablesTool = defineTool(
       figma_file_key: v.string(),
     }),
   },
-  async ({ figma_file_key }) => {
+  withWorkspaceGuard(async ({ figma_file_key }) => {
     const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";
     const cacheKey = `${figma_file_key}:variables`;
     const nowSeconds = Math.floor(Date.now() / 1000);
@@ -81,5 +81,5 @@ export const figmaGetVariablesTool = defineTool(
         `figma_get_variables failed: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
-  },
+  }),
 );

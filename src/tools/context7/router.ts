@@ -2,7 +2,7 @@ import { defineTool } from "tmcp/tool";
 import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { server } from "../../config/server";
-import { isToolAllowedForAgent } from "../../utils";
+import { isToolAllowedForAgent, withWorkspaceGuard } from "../../utils";
 import { Context7Client } from "../../client/Context7Client";
 
 export const context7GetContextTool = defineTool(
@@ -26,7 +26,7 @@ export const context7GetContextTool = defineTool(
             arguments: v.record(v.string(), v.unknown()),
         }),
     },
-    async ({ tool_name, arguments: args }) => {
+    withWorkspaceGuard(async ({ tool_name, arguments: args }) => {
         const context7Client = new Context7Client();
 
         if (!args) {
@@ -61,5 +61,5 @@ export const context7GetContextTool = defineTool(
         }
 
         return tool.error(`tool_name "${tool_name}" is not supported. Available tool_name values: get_lib_id, get_context.`);
-    }
+    }),
 );

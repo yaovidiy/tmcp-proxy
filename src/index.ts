@@ -11,9 +11,11 @@ serve({
     const headers = new Headers(request.headers);
 
     const agent_id = headers.get("x-agent-id");
+    const workspace_id = headers.get("x-workspace-id");
 
     const http_response = await http_transport.respond(request, {
       agent_id: agent_id || undefined,
+      workspace_id: workspace_id || undefined,
     });
 
     if (http_response) {

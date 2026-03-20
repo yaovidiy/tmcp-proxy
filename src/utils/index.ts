@@ -56,3 +56,5 @@ export const isAgentAllowedAccessToDir = (agent_id: string, dir_path: string): b
   const allowedDirs = AGENT_DIR_ACCESS_PERMISSIONS[agent_id];
   return allowedDirs ? allowedDirs.some(allowedDir => dir_path.includes(allowedDir)) : false;
 };
+
+export { withWorkspaceGuard } from "./workspace-guard";

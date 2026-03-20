@@ -6,6 +6,7 @@ import {
   isToolAllowedForAgent,
   logAgentSession,
   isAgentAllowedAccessToDir,
+  withWorkspaceGuard,
 } from "../../utils";
 
 const MAX_FILE_LINES = 200; // Limit the number of lines read from a file to prevent overwhelming the agent
@@ -22,7 +23,7 @@ export const localReadTool = defineTool(
       start_line: v.optional(v.number(), 0),
     }),
   },
-  async ({ path, start_line = 0 }) => {
+  withWorkspaceGuard(async ({ path, start_line = 0 }) => {
     try {
       const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";
 
@@ -73,5 +74,5 @@ export const localReadTool = defineTool(
         `Failed to read file: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
-  },
+  }),
 );

@@ -3,7 +3,7 @@ import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { eq } from "drizzle-orm";
 import { server } from "../../config/server";
-import { isToolAllowedForAgent, logAgentSession } from "../../utils";
+import { isToolAllowedForAgent, logAgentSession, withWorkspaceGuard } from "../../utils";
 import { db } from "../../db";
 import { tasks, stories } from "../../db/schema";
 
@@ -28,7 +28,7 @@ export const workspaceTasksTool = defineTool(
       status: v.optional(taskStatus),
     }),
   },
-  async ({ action, storyId, taskId, title, description, status }) => {
+  withWorkspaceGuard(async ({ action, storyId, taskId, title, description, status }) => {
     const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";
     const now = Math.floor(Date.now() / 1000);
 
@@ -175,5 +175,5 @@ export const workspaceTasksTool = defineTool(
         `workspace_tasks failed: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
-  },
+  }),
 );

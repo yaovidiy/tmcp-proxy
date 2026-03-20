@@ -1,7 +1,7 @@
 import { defineTool } from "tmcp/tool";
 import * as v from "valibot";
 import { tool } from "tmcp/utils";
-import { isToolAllowedForAgent, isAgentAllowedAccessToDir } from "../../utils";
+import { isToolAllowedForAgent, isAgentAllowedAccessToDir, withWorkspaceGuard } from "../../utils";
 import { server } from "../../config/server";
 
 export const localWriteTool = defineTool(
@@ -15,7 +15,7 @@ export const localWriteTool = defineTool(
       content: v.string(),
     }),
   },
-  async ({ path, content }) => {
+  withWorkspaceGuard(async ({ path, content }) => {
     try {
       const agent_id = (server.ctx.custom?.agent_id as string) || "unknown";
       if (!isAgentAllowedAccessToDir(agent_id, path)) {
@@ -35,5 +35,5 @@ export const localWriteTool = defineTool(
         `Failed to write to file: ${err instanceof Error ? err.message : String(err)}`,
       );
     }
-  },
+  }),
 );

@@ -2,7 +2,7 @@ import { defineTool } from "tmcp/tool";
 import { tool } from "tmcp/utils";
 import * as v from "valibot";
 import { server } from "../../config/server";
-import { isToolAllowedForAgent, logAgentSession } from "../../utils";
+import { isToolAllowedForAgent, logAgentSession, withWorkspaceGuard } from "../../utils";
 import { githubMcpClient } from "../../client/GitHubMcpClient";
 
 /**
@@ -42,7 +42,7 @@ export const githubMcpCallTool = defineTool(
       arguments: v.optional(v.record(v.string(), v.unknown()), {}),
     }),
   },
-  async ({ tool_name, arguments: args }) => {
+  withWorkspaceGuard(async ({ tool_name, arguments: args }) => {
     try {
       const result = await githubMcpClient.call(tool_name, args ?? {});
 
@@ -74,5 +74,5 @@ export const githubMcpCallTool = defineTool(
         }`,
       );
     }
-  },
+  }),
 );
